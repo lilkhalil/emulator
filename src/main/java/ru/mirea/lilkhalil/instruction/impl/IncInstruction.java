@@ -6,11 +6,7 @@ import ru.mirea.lilkhalil.memory.Memory;
 
 public class IncInstruction implements Instruction {
     @Override
-    public void execute(CPU cpu) {
-        int PC = cpu.getPC();
-        Memory memory = cpu.getMemory();
-        int[] registers = cpu.getRegisters();
-        int command = memory.read(PC);
+    public void execute(CPU cpu, Memory memory, int[] registers, int command, int pc) {
 
         int registerIdx = (command >> 4) & 0xF;
 
@@ -19,8 +15,8 @@ public class IncInstruction implements Instruction {
         int result = registers[registerIdx];
 
         updateFlags(cpu, result);
-        cpu.setPC(++PC);
-        cpu.printRegisters();
+
+        cpu.setPc(++pc);
     }
 
     private void updateFlags(CPU cpu, int result) {

@@ -6,10 +6,7 @@ import ru.mirea.lilkhalil.memory.Memory;
 
 public class JgeInstruction implements Instruction {
     @Override
-    public void execute(CPU cpu) {
-        int PC = cpu.getPC();
-        Memory memory = cpu.getMemory();
-        int command = memory.read(PC);
+    public void execute(CPU cpu, Memory memory, int[] registers, int command, int pc) {
 
         int indirect = (command >> 8) & 0xFFFFF;
 
@@ -17,11 +14,9 @@ public class JgeInstruction implements Instruction {
         boolean signFlag = cpu.isSignFlag();
 
         if (zeroFlag || !signFlag) {
-            cpu.setPC(indirect);
+            cpu.setPc(indirect);
         } else {
-            cpu.setPC(++PC);
+            cpu.setPc(++pc);
         }
-
-        cpu.printRegisters();
     }
 }

@@ -3,18 +3,22 @@ package ru.mirea.lilkhalil.cpu;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import ru.mirea.lilkhalil.instruction.Instruction;
 import ru.mirea.lilkhalil.instruction.registry.InstructionSet;
 import ru.mirea.lilkhalil.instruction.registry.impl.InstructionSetImpl;
 import ru.mirea.lilkhalil.memory.Memory;
 
 @Data
+@Slf4j
 public class CPU {
 
-    public CPU(int PC, Memory memory, long period) {
-        this.PC = PC;
+    public CPU(int pc, Memory memory, long period) {
+        this.pc = pc;
         this.memory = memory;
         this.period = period;
     }
@@ -27,7 +31,7 @@ public class CPU {
     /**
      * Program counter
      */
-    private int PC;
+    private int pc;
 
     /**
      * RAM
@@ -49,7 +53,7 @@ public class CPU {
 
     public void run() {
         executorService.scheduleAtFixedRate(() -> {
-            int command = memory.read(PC);
+            int command = memory.read(pc);
             int operationCode = (command >> 28) & 0xF;
             Instruction instruction = instructionSet.getInstruction(operationCode);
             instruction.execute(this);
@@ -57,8 +61,8 @@ public class CPU {
     }
 
     public void printRegisters() {
-        for (int i = 0; i < registers.length; ++i)
-            System.out.printf("R[%d]=%d ", i, registers[i]);
-        System.out.println();
+        log.info(IntStream.range(0, registers.length)
+                .mapToObj(i -> String.format("R[%d]=%d", i, registers[i]))
+                .collect(Collectors.joining(", ")));
     }
 }

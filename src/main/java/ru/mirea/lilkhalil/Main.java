@@ -33,10 +33,10 @@ public class Main
     public static Memory initialize() {
         Memory memory = new RAM(MEMORY_SIZE);
 
-        int[] Vec_1 = {5, 1, 144, 5, 3, 2};
+        int[] arr = {5, 1, 144, 5, 3, 2};
 
-        for (int i = 0; i < Vec_1.length; i++) {
-            memory.write(DATA_OFFSET + i, Vec_1[i]);
+        for (int i = 0; i < arr.length; i++) {
+            memory.write(DATA_OFFSET + i, arr[i]);
         }
 
         /*

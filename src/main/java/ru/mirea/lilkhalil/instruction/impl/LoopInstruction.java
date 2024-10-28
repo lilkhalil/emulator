@@ -6,11 +6,7 @@ import ru.mirea.lilkhalil.memory.Memory;
 
 public class LoopInstruction implements Instruction {
     @Override
-    public void execute(CPU cpu) {
-        int PC = cpu.getPC();
-        Memory memory = cpu.getMemory();
-        int[] registers = cpu.getRegisters();
-        int command = memory.read(PC);
+    public void execute(CPU cpu, Memory memory, int[] registers, int command, int pc) {
 
         int counter = registers[2];
         counter--;
@@ -19,10 +15,8 @@ public class LoopInstruction implements Instruction {
         int indirect = (command >> 8) & 0xFFFFF;
 
         if (counter > 0)
-            cpu.setPC(indirect);
+            cpu.setPc(indirect);
         else
-            cpu.setPC(++PC);
-
-        cpu.printRegisters();
+            cpu.setPc(++pc);
     }
 }

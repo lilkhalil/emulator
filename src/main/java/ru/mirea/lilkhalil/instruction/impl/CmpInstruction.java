@@ -6,12 +6,7 @@ import ru.mirea.lilkhalil.memory.Memory;
 
 public class CmpInstruction implements Instruction {
     @Override
-    public void execute(CPU cpu) {
-        int PC = cpu.getPC();
-        Memory memory = cpu.getMemory();
-        int[] registers = cpu.getRegisters();
-        int command = memory.read(PC);
-
+    public void execute(CPU cpu, Memory memory, int[] registers, int command, int pc) {
         int destIdx = (command >> 4) & 0xF;
         int sourceIdx = command & 0xF;
 
@@ -21,8 +16,8 @@ public class CmpInstruction implements Instruction {
         int result = op1 - op2;
 
         updateFlags(cpu, result, op1, op2);
-        cpu.setPC(++PC);
-        cpu.printRegisters();
+
+        cpu.setPc(++pc);
     }
 
     private void updateFlags(CPU cpu, int result, int op1, int op2) {

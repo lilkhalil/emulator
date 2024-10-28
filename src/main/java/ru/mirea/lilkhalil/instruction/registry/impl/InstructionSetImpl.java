@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class InstructionSetImpl implements InstructionSet {
 
-    private final static Map<Integer, Instruction> instructions = new HashMap<>();
+    private static final Map<Integer, Instruction> instructions = new HashMap<>();
 
     static {
         instructions.put(0x0, new HltInstruction());

@@ -1,9 +1,15 @@
 package ru.mirea.lilkhalil.utils;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+@Slf4j
+@NoArgsConstructor(access = AccessLevel.PRIVATE, force = true)
 public class Utils {
     private static final Properties properties = new Properties();
 
@@ -11,7 +17,7 @@ public class Utils {
         try (InputStream input = Utils.class.getClassLoader().getResourceAsStream("application.properties")) {
             properties.load(input);
         } catch (IOException ex) {
-            throw new RuntimeException("Ошибка загрузки файла конфигурации: ", ex);
+            log.error("Ошибка загрузки файла конфигурации: ", ex);
         }
     }
 

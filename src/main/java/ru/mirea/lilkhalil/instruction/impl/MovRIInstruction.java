@@ -7,11 +7,7 @@ import ru.mirea.lilkhalil.memory.Memory;
 public class MovRIInstruction implements Instruction {
 
     @Override
-    public void execute(CPU cpu) {
-        int PC = cpu.getPC();
-        Memory memory = cpu.getMemory();
-        int[] registers = cpu.getRegisters();
-        int command = memory.read(PC);
+    public void execute(CPU cpu, Memory memory, int[] registers, int command, int pc) {
 
         int indirect = (command >> 8) & 0xFFFFF;
 
@@ -19,7 +15,6 @@ public class MovRIInstruction implements Instruction {
 
         registers[registerIdx] = indirect;
 
-        cpu.setPC(++PC);
-        cpu.printRegisters();
+        cpu.setPc(++pc);
     }
 }
