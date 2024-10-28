@@ -7,6 +7,6 @@ public class HltInstruction implements Instruction {
 
     @Override
     public void execute(CPU cpu) {
-        cpu.setRunning(false);
+        cpu.getExecutorService().shutdown();
     }
 }

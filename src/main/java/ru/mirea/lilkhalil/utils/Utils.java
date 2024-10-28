@@ -9,4 +9,9 @@ public class Utils {
      * Смещение данных в оперативной памяти
      */
     public static final int DATA_OFFSET = 512;
+
+    /** 
+     * Период вызова инструкций процессора
+     * */
+    public static final long CYCLE_PERIOD = 500L;
 }

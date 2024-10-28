@@ -4,6 +4,7 @@ import ru.mirea.lilkhalil.cpu.CPU;
 import ru.mirea.lilkhalil.memory.Memory;
 import ru.mirea.lilkhalil.memory.impl.RAM;
 
+import static ru.mirea.lilkhalil.utils.Utils.CYCLE_PERIOD;
 import static ru.mirea.lilkhalil.utils.Utils.DATA_OFFSET;
 import static ru.mirea.lilkhalil.utils.Utils.MEMORY_SIZE;
 
@@ -13,7 +14,7 @@ public class Main
     {
         Memory memory = initialize();
 
-        CPU cpu = new CPU(0, memory);
+        CPU cpu = new CPU(0, memory, CYCLE_PERIOD);
 
         cpu.run();
     }
@@ -32,7 +33,7 @@ public class Main
     public static Memory initialize() {
         Memory memory = new RAM(MEMORY_SIZE);
 
-        int[] Vec_1 = {5, -12, -1, -9, -8, -7};
+        int[] Vec_1 = {5, 1, 144, 5, 3, 2};
 
         for (int i = 0; i < Vec_1.length; i++) {
             memory.write(DATA_OFFSET + i, Vec_1[i]);

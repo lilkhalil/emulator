@@ -1,5 +1,9 @@
 package ru.mirea.lilkhalil.cpu;
 
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
 import lombok.Data;
 import ru.mirea.lilkhalil.instruction.Instruction;
 import ru.mirea.lilkhalil.instruction.registry.InstructionSet;
@@ -9,9 +13,10 @@ import ru.mirea.lilkhalil.memory.Memory;
 @Data
 public class CPU {
 
-    public CPU(int PC, Memory memory) {
+    public CPU(int PC, Memory memory, long period) {
         this.PC = PC;
         this.memory = memory;
+        this.period = period;
     }
 
     /**
@@ -37,16 +42,18 @@ public class CPU {
     private boolean overflowFlag;
     private boolean carryFlag;
 
-    private boolean running = true;
     private final InstructionSet instructionSet = new InstructionSetImpl();
 
+    private final ScheduledExecutorService executorService = new ScheduledThreadPoolExecutor(1);
+    private final long period;
+
     public void run() {
-        while (running) {
+        executorService.scheduleAtFixedRate(() -> {
             int command = memory.read(PC);
             int operationCode = (command >> 28) & 0xF;
             Instruction instruction = instructionSet.getInstruction(operationCode);
             instruction.execute(this);
-        }
+        }, 0, period, TimeUnit.MILLISECONDS);
     }
 
     public void printRegisters() {
