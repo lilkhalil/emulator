@@ -10,24 +10,33 @@ import static ru.mirea.lilkhalil.utils.Utils.MEMORY_SIZE;
 
 public class Main
 {
-    public static void main( String[] args )
+    public static void main(String ... args)
     {
-        Memory memory = initialize();
+        Memory memory = new RAM(MEMORY_SIZE);
+
+        initializeData(memory, args);
+        initializeCommands(memory);
 
         CPU cpu = new CPU(0, memory, CYCLE_PERIOD);
 
         cpu.run();
     }
 
-    public static Memory initialize() {
-        Memory memory = new RAM(MEMORY_SIZE);
+    public static void initializeData(Memory memory, String ... args) {
 
-        int[] arr = {5, 1, 144, 5, 3, 2};
+        if (args.length == 0)
+            throw new IllegalArgumentException("Массив данных не передан." +
+                    "Укажите данные в аргументах командной строки.");
 
-        for (int i = 0; i < arr.length; i++) {
-            memory.write(DATA_OFFSET + i, arr[i]);
-        }
+        if (args.length < 2)
+            throw new IllegalArgumentException("В массиве должно быть минимум два элемента." +
+                    "Укажите данные в формате [размер массива] [элемент1] [элемент2] ... [элементN]");
 
+        for (int i = 0; i < args.length; ++i)
+            memory.write(i + DATA_OFFSET, Integer.parseInt(args[i]));
+    }
+
+    public static void initializeCommands(Memory memory) {
         /*
         MOV ecx [Vec_1]
          */
@@ -72,7 +81,5 @@ public class Main
         HALT
          */
         memory.write(8, 0x10);
-
-        return memory;
     }
 }
