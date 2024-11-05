@@ -1,6 +1,13 @@
 package ru.mirea.lilkhalil.memory.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import ru.mirea.lilkhalil.memory.Memory;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+
+import static ru.mirea.lilkhalil.utils.Utils.DATA_OFFSET;
 
 /**
  * Класс {@code RAM} реализует интерфейс {@link Memory} и представляет
@@ -10,6 +17,7 @@ import ru.mirea.lilkhalil.memory.Memory;
  * адресам, которые представляют индексы в массиве.
  * </p>
  */
+@Slf4j
 public class RAM implements Memory {
 
     /** Массив, представляющий память, где каждый элемент является ячейкой памяти. */
@@ -44,5 +52,41 @@ public class RAM implements Memory {
     @Override
     public void write(int address, int value) {
         memory[address] = value;
+    }
+
+    /**
+     * Загружает данные из указанного файла в память. Файл должен содержать
+     * адрес и значение в двоичном формате, разделенные двоеточием.
+     * Разделяет секции данных и команд на основе пустой строки:
+     * - До пустой строки загружает данные в секцию данных с учетом смещения.
+     * - После пустой строки загружает команды непосредственно по указанным адресам.
+     *
+     * @param fileName имя файла, из которого следует загрузить данные в память
+     */
+    @Override
+    public void load(String fileName) {
+        boolean isDataSection = true;
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+
+                if (line.isBlank()) {
+                    isDataSection = false;
+                    continue;
+                }
+
+                String[] parts = line.split(":");
+                int address = Integer.parseInt(parts[0], 2);
+                int value = Integer.parseUnsignedInt(parts[1], 2);
+
+                if (isDataSection) {
+                    memory[address + DATA_OFFSET] = value;
+                } else {
+                    memory[address] = value;
+                }
+            }
+        } catch (IOException ex) {
+            log.error("Ошибка загрузки файла исходного кода программы", ex);
+        }
     }
 }
